@@ -5,6 +5,21 @@ window.onload = function(){
 
   const cep = document.querySelector("#cep");
 
+  function checkConnection() {
+      var networkState = navigator.connection.type;
+
+      var states = {};
+
+      states[connection.NONE]=0;
+
+      if(states[networkState]==0){
+        return false;
+      }else{
+        return true;
+      }
+
+  checkConnection();
+
   const opcoes = {
     method:'GET',
     mode: 'cors',
@@ -12,6 +27,7 @@ window.onload = function(){
   }
 
   buscar.addEventListener("click", function(){
+    if(checkConnection()){
     fetch(`https://viacep.com.br/ws/${ cep.value }/json/`,opcoes)
       .then(response => {response.json()
         .then(data => {
@@ -21,10 +37,13 @@ window.onload = function(){
           document.querySelector("#rua").value = data['logradouro'];
         })
       })
+    }else{
+      alert("não tem conexão anjão");
+    }
   });
 
    buscarQR.addEventListener("click", function(){
-
+     if(checkConnection()){
       cordova.plugins.barcodeScanner.scan(
       function (result) {
           fetch(`https://viacep.com.br/ws/${result.text}/json/`,opcoes)
@@ -54,5 +73,9 @@ window.onload = function(){
           disableSuccessBeep: false // iOS and Android
       }
     );
+     }else{
+      alert("não tem conexão anjão");
+    }
   });
+  }
 }
